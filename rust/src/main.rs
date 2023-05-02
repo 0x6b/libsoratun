@@ -13,6 +13,10 @@ use structopt::StructOpt;
 
 use crate::soratun::SendRequest;
 
+#[allow(non_snake_case)]
+#[allow(dead_code)]
+#[allow(non_camel_case_types)]
+#[allow(unused_qualifications)]
 mod soratun;
 
 #[derive(StructOpt, Debug)]

@@ -23,7 +23,7 @@ The C library allows you to embed Soracom Arc connectivity into your own program
 ```console
 $ git clone https://github.com/soracom/libsoratun
 $ cd libsoratun
-$ make bindings
+$ make all
 $ # Rust
 $ cd rust
 $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'

@@ -5,8 +5,8 @@ LIB_DIR = lib
 
 SRC = $(shell find $(SRC_DIR) -type f -name '*.go')
 
-LIB_SHARED = $(LIB_DIR)/lib$(NAME).so
-LIB_ARCHIVE = $(LIB_DIR)/lib$(NAME).a
+LIB_SHARED = $(LIB_DIR)/shared/lib$(NAME).so
+LIB_ARCHIVE = $(LIB_DIR)/archive/lib$(NAME).a
 
 BINDING_DIR_RUST = rust
 BINDING_RUST = $(BINDING_DIR_RUST)/src/$(NAME).rs
@@ -16,6 +16,8 @@ help:
 	@echo
 	@echo "available targets:"
 	@grep -E '^[a-zA-Z._-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
+
+all: libs bindings ## Build all
 
 libs: $(LIB_SHARED) $(LIB_ARCHIVE) ## Build libraries
 
@@ -31,6 +33,6 @@ $(BINDING_RUST): $(LIB_ARCHIVE) ## Build Rust bindings
 	bindgen $(LIB_DIR)/archive/lib$(NAME).h -o $(BINDING_DIR_RUST)/src/$(NAME).rs
 
 clean: ## Clean up
-	rm -rf $(LIB_DIR)/lib$(NAME).{so,a,h}
+	rm -rf $(LIB_DIR)/{archive,shared}/*
 
-.PHONY: help lib bindings
+.PHONY: help all libs bindings

@@ -6,6 +6,7 @@ The C library allows you to embed Soracom Arc connectivity into your own program
 
 - Go 1.20.3
 - Rust 1.68.2
+- Python 3.9.6
 - macOS Ventura 13.3
 
 ## Prerequisites
@@ -17,17 +18,21 @@ The C library allows you to embed Soracom Arc connectivity into your own program
    - [Unified Endpoint Overview](https://developers.soracom.io/en/docs/unified-endpoint/)
    - [Unified Endpoint](https://users.soracom.io/ja-jp/docs/unified-endpoint/)
 
-## Build and Run Rust Example
+## Build and Run Examples
 
 ```console
 $ git clone https://github.com/soracom/libsoratun
 $ cd libsoratun
 $ make bindings
+$ # Rust
 $ cd rust
 $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
+$ # Python
+$ cd python
+$ python3 main.py /path/to/arc.json '{"message": "hey"}'
 ```
 
-See [`rust/src/main.rs`](rust/src/main.rs) for example usage.
+See [`rust/src/main.rs`](rust/src/main.rs) or [`python/main.py`](python/main.py) for example usage.
 
 ## License
 

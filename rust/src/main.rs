@@ -52,16 +52,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn into_raw(args: Args) -> Result<(*mut c_char, *mut c_char, *mut c_char, *mut c_char), Box<dyn Error>> {
-    let config = read_config(&args.config)?;
+    let config = read_config(&args.config)?.into_raw();
     let method = CString::new(args.method)?.into_raw();
     let path = CString::new(args.path)?.into_raw();
     let body = CString::new(args.body)?.into_raw();
     Ok((config, method, path, body))
 }
 
-fn read_config(path: &str) -> Result<*mut c_char, Box<dyn Error>> {
+fn read_config(path: &str) -> Result<CString, Box<dyn Error>> {
     let mut file = File::open(path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
-    Ok(CString::new(contents)?.into_raw())
+    Ok(CString::new(contents)?)
 }

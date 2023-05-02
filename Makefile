@@ -30,7 +30,7 @@ $(LIB_ARCHIVE): $(SRC) go.mod ## Build archive library
 bindings: $(BINDING_RUST) ## Build bindings
 
 $(BINDING_RUST): $(LIB_ARCHIVE) ## Build Rust bindings
-	bindgen $(LIB_DIR)/archive/lib$(NAME).h -o $(BINDING_DIR_RUST)/src/$(NAME).rs
+	bindgen --no-layout-tests $(LIB_DIR)/archive/lib$(NAME).h -o $(BINDING_DIR_RUST)/src/$(NAME).rs
 
 clean: ## Clean up
 	rm -rf $(LIB_DIR)/{archive,shared}/*

@@ -10,4 +10,4 @@ method = ctypes.c_char_p(b"POST")
 path = ctypes.c_char_p(b"/")
 body = ctypes.c_char_p(" ".join(sys.argv[2:]).encode("utf-8"))
 
-soratun.SendRequest(config, method, path, body)
+soratun.Send(config, method, path, body)

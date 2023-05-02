@@ -11,7 +11,7 @@ use std::{
 
 use structopt::StructOpt;
 
-use crate::soratun::SendRequest;
+use crate::soratun::Send;
 
 #[allow(non_snake_case)]
 #[allow(dead_code)]
@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let (config, method, path, body) = into_raw(Args::from_args())?;
 
     let result = unsafe {
-        let r = SendRequest(config, method, path, body);
+        let r = Send(config, method, path, body);
         CStr::from_ptr(r).to_str()?
     };
     println!("{result}");

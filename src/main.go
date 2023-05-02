@@ -53,10 +53,10 @@ type params struct {
 	headers []string
 }
 
-// SendRequest sends a request to the unified endpoint with given Config and HTTP headers.
+// Send sends a request to the unified endpoint with given Config and HTTP headers.
 //
-//export SendRequest
-func SendRequest(configJson *C.char, method, path, body *C.char) *C.char {
+//export Send
+func Send(configJson *C.char, method, path, body *C.char) *C.char {
 	config, err := newConfig([]byte(C.GoString(configJson)))
 	if err != nil {
 		return nil

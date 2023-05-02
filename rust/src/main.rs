@@ -22,12 +22,19 @@ mod soratun;
 #[derive(StructOpt, Debug)]
 #[structopt(name = "arc", about = "A CLI for interacting with the unified endpoint.")]
 struct Args {
+    /// Path to the Soracom Arc config file.
     #[structopt(short, long, default_value = "arc.json")]
     config: String,
+
+    /// HTTP method.
     #[structopt(short, long, default_value = "POST")]
     method: String,
+
+    /// HTTP path.
     #[structopt(short, long, default_value = "/")]
     path: String,
+
+    /// HTTP body.
     #[structopt()]
     body: String,
 }

@@ -15,8 +15,8 @@ The C library allows you to embed Soracom Arc connectivity into your own program
    - [Soracom Arc Soratun Tool](https://developers.soracom.io/en/docs/arc/soratun/) (English)
    - [soratun を利用して接続する: soratun の概要と機能](https://users.soracom.io/ja-jp/docs/arc/soratun-overview/) (Japanese)
 2. You have to enable the unified endpoint for your SIM group. See documentation for detail.
-   - [Unified Endpoint Overview](https://developers.soracom.io/en/docs/unified-endpoint/)
-   - [Unified Endpoint](https://users.soracom.io/ja-jp/docs/unified-endpoint/)
+   - [Unified Endpoint Overview](https://developers.soracom.io/en/docs/unified-endpoint/) (English)
+   - [Unified Endpoint](https://users.soracom.io/ja-jp/docs/unified-endpoint/) (Japanese)
 
 ## Build and Run Examples
 

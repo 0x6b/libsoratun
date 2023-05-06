@@ -6,11 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"golang.zx2c4.com/wireguard/conn"
-	"golang.zx2c4.com/wireguard/device"
-	"golang.zx2c4.com/wireguard/tun"
-	"golang.zx2c4.com/wireguard/tun/netstack"
-	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 	"io"
 	"net"
 	"net/http"
@@ -18,10 +13,15 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+
+	"golang.zx2c4.com/wireguard/conn"
+	"golang.zx2c4.com/wireguard/device"
+	"golang.zx2c4.com/wireguard/tun"
+	"golang.zx2c4.com/wireguard/tun/netstack"
+	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
 
 func main() {
-
 }
 
 const (

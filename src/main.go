@@ -1,16 +1,10 @@
 package main
 
 import (
-	"C"
 	"context"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"golang.zx2c4.com/wireguard/conn"
-	"golang.zx2c4.com/wireguard/device"
-	"golang.zx2c4.com/wireguard/tun"
-	"golang.zx2c4.com/wireguard/tun/netstack"
-	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 	"io"
 	"net"
 	"net/http"
@@ -18,10 +12,16 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+
+	"golang.zx2c4.com/wireguard/conn"
+	"golang.zx2c4.com/wireguard/device"
+	"golang.zx2c4.com/wireguard/tun"
+	"golang.zx2c4.com/wireguard/tun/netstack"
+	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
 
 func main() {
-
+	Send2()
 }
 
 const (
@@ -53,18 +53,32 @@ type params struct {
 	headers []string
 }
 
-// Send sends a request to the unified endpoint with given Config and HTTP headers.
-//
-//export Send
-func Send(configJson *C.char, method, path, body *C.char) *C.char {
-	config, err := newConfig([]byte(C.GoString(configJson)))
+func Send2() string {
+	config, err := newConfig([]byte(`{
+  "privateKey": "r644aKrOAHb42zUKY34RDPDS34zRQpVggOHZB+9DHro=",
+  "publicKey": "US2o8X2uPhYui69zEsJ8kR7PxAMp2t3+FT5yr79UMT4=",
+  "simId": "",
+  "logLevel": 2,
+  "enableMetrics": true,
+  "interface": "utun",
+  "mtu": 1420,
+  "persistentKeepalive": 60,
+  "arcSessionStatus": {
+    "arcServerPeerPublicKey": "QIuOQv70QX+Bzvf9ZM/OwqayQBPKQYgXX62xrxpqBh4=",
+    "arcServerEndpoint": "35.74.120.49:11010",
+    "arcAllowedIPs": [
+      "100.127.0.0/16"
+    ],
+    "arcClientPeerIpAddress": "10.180.169.243"
+  }
+}`))
 	if err != nil {
-		return nil
+		panic(err)
 	}
 
 	t, err := createTunnel(config)
 	if err != nil {
-		return nil
+		panic(err)
 	}
 	endpoint, _ := url.Parse(fmt.Sprintf("http://%s:%d", UnifiedEndpointHostname, UnifiedEndpointPort))
 
@@ -78,26 +92,21 @@ func Send(configJson *C.char, method, path, body *C.char) *C.char {
 		headers:  []string{"User-Agent: libsoratun/0.0.1"},
 	}
 
-	m := C.GoString(method)
-	p := C.GoString(path)
-	b := C.GoString(body)
-	if !(m == http.MethodGet || m == http.MethodPost) {
-		return nil
-	}
+	method := http.MethodPost
 
 	req, err := c.makeRequest(&params{
-		path:    strings.TrimPrefix(p, "/"),
-		body:    strings.NewReader(b),
-		method:  C.GoString(method),
+		path:    "/",
+		body:    strings.NewReader("test from WASM"),
+		method:  method,
 		headers: c.headers,
 	})
 	if err != nil {
-		return nil
+		panic(err)
 	}
 
 	res, err := c.doRequest(req)
 	if err != nil {
-		return nil
+		panic(err)
 	}
 
 	response, err := io.ReadAll(res.Body)
@@ -106,7 +115,7 @@ func Send(configJson *C.char, method, path, body *C.char) *C.char {
 		panic(err)
 	}
 
-	return C.CString(string(response))
+	return string(response)
 }
 
 // Close frees tunnel related resources.

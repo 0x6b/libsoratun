@@ -32,6 +32,10 @@ bindings: $(BINDING_RUST) ## Build bindings
 $(BINDING_RUST): $(LIB_ARCHIVE) ## Build Rust bindings
 	bindgen --no-layout-tests $(LIB_DIR)/archive/lib$(NAME).h -o $(BINDING_DIR_RUST)/src/$(NAME).rs
 
+wasm:
+	GOOS=js GOARCH=wasm go build -o src/test.wasm src/main.go
+
+
 clean: ## Clean up
 	rm -rf $(LIB_DIR)/{archive,shared}/*
 

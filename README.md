@@ -1,6 +1,6 @@
 # libsoratun
 
-The C library allows you to embed Soracom Arc connectivity into your own program. You can sent a message to the unified point, with Soracom Arc, entirely from userspace.
+The C library allows you to embed Soracom Arc connectivity into your own program. You can sent a message to the unified endpoint, with Soracom Arc, entirely from userspace (no root privilege is required).
 
 ## Tested Setup
 
@@ -24,16 +24,16 @@ The C library allows you to embed Soracom Arc connectivity into your own program
 $ git clone https://github.com/soracom/libsoratun
 $ cd libsoratun
 $ make all
-$ # Rust
+$ # Rust example
 $ cd rust
 $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
-$ # Python
+$ # Python example
 $ cd python
 $ python3 main.py /path/to/arc.json '{"message": "hey"}'
 ```
 
-See [`rust/src/main.rs`](rust/src/main.rs) or [`python/main.py`](python/main.py) for example usage.
+See [`rust/src/main.rs`](rust/src/main.rs) or [`python/main.py`](python/main.py) for usage.
 
 ## License
 
-See [LICENSE](LICENSE) for detail.
+MIT. See [LICENSE](LICENSE) for detail.

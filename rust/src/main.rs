@@ -9,8 +9,7 @@ use std::{
     io::Read,
 };
 
-use structopt::StructOpt;
-
+use clap::Parser;
 use crate::soratun::Send;
 
 #[allow(non_snake_case)]
@@ -19,28 +18,28 @@ use crate::soratun::Send;
 #[allow(unused_qualifications)]
 mod soratun;
 
-#[derive(StructOpt, Debug)]
-#[structopt(name = "arc", about = "A CLI for interacting with the unified endpoint.")]
+#[derive(Parser, Debug)]
+#[clap()]
 struct Args {
     /// Path to the Soracom Arc config file.
-    #[structopt(short, long, default_value = "arc.json")]
+    #[clap(short, long, default_value = "arc.json")]
     config: String,
 
     /// HTTP method.
-    #[structopt(short, long, default_value = "POST")]
+    #[clap(short, long, default_value = "POST")]
     method: String,
 
     /// HTTP path.
-    #[structopt(short, long, default_value = "/")]
+    #[clap(short, long, default_value = "/")]
     path: String,
 
     /// HTTP body.
-    #[structopt()]
+    #[clap()]
     body: String,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let (config, method, path, body) = into_raw(Args::from_args())?;
+    let (config, method, path, body) = into_raw(Args::parse())?;
 
     let result = unsafe {
         let r = Send(config, method, path, body);

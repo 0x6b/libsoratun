@@ -7,6 +7,7 @@ The C library allows you to embed Soracom Arc connectivity into your own program
 - Go 1.20.3
 - Rust 1.68.2
 - Python 3.9.6
+- Node.js v18.14.2
 - macOS Ventura 13.3
 
 ## Prerequisites
@@ -30,9 +31,13 @@ $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
 $ # Python example
 $ cd python
 $ python3 main.py /path/to/arc.json '{"message": "hey"}'
+$ # Node.js example
+$ cd nodejs
+$ npm install
+$ node src/index.py /path/to/arc.json '{"message": "hey"}'
 ```
 
-See [`rust/src/main.rs`](rust/src/main.rs) or [`python/main.py`](python/main.py) for usage.
+See [`rust/src/main.rs`](rust/src/main.rs), [`python/main.py`](python/main.py), or [`nodejs/src/index.js`](nodejs/src/index.js) for usage.
 
 ## License
 

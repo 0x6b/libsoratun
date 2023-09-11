@@ -8,4 +8,4 @@ const soratun = Library("libsoratun", {
 });
 
 const config = readFileSync(process.argv[2], "utf8");
-soratun.Send(config, "POST", "/", `{"message": "hello"}`);
+soratun.Send(config, "POST", "/", process.argv[3]);

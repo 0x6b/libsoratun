@@ -4,11 +4,11 @@ The C library allows you to embed Soracom Arc connectivity into your own program
 
 ## Tested Setup
 
-- Go 1.20.3
-- Rust 1.68.2
+- Go 1.21.0
+- Rust 1.72.0
 - Python 3.9.6
 - Node.js v18.14.2
-- macOS Ventura 13.3
+- macOS Ventura 13.4.1
 
 ## Prerequisites
 

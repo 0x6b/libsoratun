@@ -13,6 +13,12 @@ func main() {
 }
 
 // Send sends a request to the unified endpoint with given Config and HTTP headers.
+// Args:
+//
+// - `configJson`: JSON string of soratun config.
+// - `method`: HTTP method of the request. Only GET or POST is supported.
+// - `path`: Path of the request.
+// - `body`: Body of the request.
 //
 //export Send
 func Send(configJson, method, path, body *C.char) *C.char {

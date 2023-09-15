@@ -1,6 +1,6 @@
 # libsoratun
 
-The C library allows you to embed Soracom Arc connectivity into your own program. You can sent a message to the unified endpoint, with Soracom Arc, entirely from userspace (no root privilege is required).
+The C library allows you to embed Soracom Arc connectivity into your own program. You can send a message to the unified endpoint, with Soracom Arc, entirely from userspace (no root privilege is required).
 
 ## Tested Setup
 

@@ -31,7 +31,7 @@ const (
 	SoracomNameServer2      = "100.127.1.53"
 )
 
-// UnifiedEndpointHTTPClient is a HTTP client that can be used to communicate with SORACOM Unified Endpoint.
+// UnifiedEndpointHTTPClient is an HTTP client that can be used to communicate with SORACOM Unified Endpoint.
 type UnifiedEndpointHTTPClient struct {
 	httpClient *http.Client
 	endpoint   *url.URL
@@ -318,11 +318,11 @@ func (a *UDPAddr) UnmarshalText(text []byte) error {
 }
 
 // String returns string representation of UDPAddr for WireGuard configuration.
-func (u UDPAddr) String() string {
-	if u.IP.To4() != nil {
-		return fmt.Sprintf("%s:%d", u.IP, u.Port)
-	} else if u.IP.To16() != nil {
-		return fmt.Sprintf("[%s]:%d", u.IP, u.Port)
+func (a UDPAddr) String() string {
+	if a.IP.To4() != nil {
+		return fmt.Sprintf("%s:%d", a.IP, a.Port)
+	} else if a.IP.To16() != nil {
+		return fmt.Sprintf("[%s]:%d", a.IP, a.Port)
 	} else {
 		return ""
 	}

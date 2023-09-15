@@ -1,8 +1,10 @@
 NAME = soratun
 GO = go
+
+SRC = $(wildcard libsoratun/*.go) $(LIB_ENTRY)
 LIB_DIR = lib
 
-SRC = libsoratun.go
+LIB_ENTRY = libsoratun.go
 
 LIB_SHARED = $(LIB_DIR)/shared/lib$(NAME).so
 LIB_ARCHIVE = $(LIB_DIR)/archive/lib$(NAME).a
@@ -21,10 +23,10 @@ all: libs bindings ## Build all
 libs: $(LIB_SHARED) $(LIB_ARCHIVE) ## Build libraries
 
 $(LIB_SHARED): $(SRC) go.mod ## Build shared library
-	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).so $(SRC)
+	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).so $(LIB_ENTRY)
 
 $(LIB_ARCHIVE): $(SRC) go.mod ## Build archive library
-	go build -buildmode=c-archive -o $(LIB_DIR)/archive/lib$(NAME).a $(SRC)
+	go build -buildmode=c-archive -o $(LIB_DIR)/archive/lib$(NAME).a $(LIB_ENTRY)
 
 bindings: $(BINDING_RUST) ## Build bindings
 

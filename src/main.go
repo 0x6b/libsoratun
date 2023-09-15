@@ -190,13 +190,13 @@ func createTunnel(config *Config) (*tunnel, error) {
 
 	conf := fmt.Sprintf(`private_key=%s
 public_key=%s
-endpoint=%s:%d
+endpoint=%s
 allowed_ip=0.0.0.0/0
 `,
 		config.PrivateKey.AsHexString(),
 		config.ArcSession.ArcServerPeerPublicKey.AsHexString(),
-		config.ArcSession.ArcServerEndpoint.IP,
-		config.ArcSession.ArcServerEndpoint.Port)
+		config.ArcSession.ArcServerEndpoint.String(),
+	)
 
 	if err := dev.IpcSet(conf); err != nil {
 		return nil, fmt.Errorf("failed to configure device: %w", err)
@@ -315,6 +315,17 @@ func (a *UDPAddr) UnmarshalText(text []byte) error {
 	a.IP, a.Port = ip, port
 	a.RawEndpoint = text
 	return nil
+}
+
+// String returns string representation of UDPAddr for WireGuard configuration.
+func (u UDPAddr) String() string {
+	if u.IP.To4() != nil {
+		return fmt.Sprintf("%s:%d", u.IP, u.Port)
+	} else if u.IP.To16() != nil {
+		return fmt.Sprintf("[%s]:%d", u.IP, u.Port)
+	} else {
+		return ""
+	}
 }
 
 // UnmarshalText converts a byte array into IPNet. UnmarshalText returns error if invalid CIDR is provided.

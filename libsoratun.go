@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/0x6b/libsoratun/internal"
 	"golang.zx2c4.com/wireguard/conn"
 	"golang.zx2c4.com/wireguard/device"
 	"golang.zx2c4.com/wireguard/tun"
@@ -31,26 +32,11 @@ const (
 	SoracomNameServer2      = "100.127.1.53"
 )
 
-// UnifiedEndpointHTTPClient is an HTTP client that can be used to communicate with SORACOM Unified Endpoint.
-type UnifiedEndpointHTTPClient struct {
-	httpClient *http.Client
-	endpoint   *url.URL
-	headers    []string
-	verbose    bool
-}
-
 type tunnel struct {
 	device   *device.Device
 	tunnel   tun.Device
 	net      *netstack.Net
 	resolver *net.Resolver
-}
-
-type params struct {
-	path    string
-	body    io.Reader
-	method  string
-	headers []string
 }
 
 // Send sends a request to the unified endpoint with given Config and HTTP headers.
@@ -68,14 +54,14 @@ func Send(configJson *C.char, method, path, body *C.char) *C.char {
 	}
 	endpoint, _ := url.Parse(fmt.Sprintf("http://%s:%d", UnifiedEndpointHostname, UnifiedEndpointPort))
 
-	c := &UnifiedEndpointHTTPClient{
-		httpClient: &http.Client{
+	c := &internal.UnifiedEndpointHTTPClient{
+		HttpClient: &http.Client{
 			Transport: &http.Transport{
 				DialContext: t.DialContext,
 			},
 		},
-		endpoint: endpoint,
-		headers:  []string{"User-Agent: libsoratun/0.0.1"},
+		Endpoint: endpoint,
+		Headers:  []string{"User-Agent: libsoratun/0.0.1"},
 	}
 
 	m := C.GoString(method)
@@ -85,17 +71,17 @@ func Send(configJson *C.char, method, path, body *C.char) *C.char {
 		return nil
 	}
 
-	req, err := c.makeRequest(&params{
-		path:    strings.TrimPrefix(p, "/"),
-		body:    strings.NewReader(b),
-		method:  C.GoString(method),
-		headers: c.headers,
+	req, err := c.MakeRequest(&internal.Params{
+		Path:    strings.TrimPrefix(p, "/"),
+		Body:    strings.NewReader(b),
+		Method:  C.GoString(method),
+		Headers: c.Headers,
 	})
 	if err != nil {
 		return nil
 	}
 
-	res, err := c.doRequest(req)
+	res, err := c.DoRequest(req)
 	if err != nil {
 		return nil
 	}
@@ -127,51 +113,6 @@ func (t *tunnel) DialContext(ctx context.Context, network, addr string) (net.Con
 // Resolver returns internal resolver for the tunnel. Since we use gVisor as TCP stack we have to implement DNS resolver by ourselves.
 func (t *tunnel) Resolver() *net.Resolver {
 	return t.resolver
-}
-
-func (c *UnifiedEndpointHTTPClient) makeRequest(params *params) (*http.Request, error) {
-	req, err := http.NewRequest(
-		params.method,
-		fmt.Sprintf("%s://%s:%s/%s",
-			c.endpoint.Scheme,
-			c.endpoint.Hostname(),
-			c.endpoint.Port(),
-			params.path,
-		),
-		params.body,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, h := range params.headers {
-		header := strings.SplitN(h, ":", 2)
-		if len(header) == 2 {
-			req.Header.Set(strings.TrimSpace(header[0]), strings.TrimSpace(header[1]))
-		}
-	}
-
-	return req, nil
-}
-
-func (c *UnifiedEndpointHTTPClient) doRequest(req *http.Request) (*http.Response, error) {
-	res, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if res.StatusCode >= http.StatusBadRequest {
-		defer func() {
-			err := res.Body.Close()
-			if err != nil {
-				fmt.Println("failed to close response", err)
-			}
-		}()
-		r, _ := io.ReadAll(res.Body)
-		return res, fmt.Errorf("%s: %s %s: %s", res.Status, req.Method, req.URL, r)
-	}
-
-	return res, nil
 }
 
 func createTunnel(config *Config) (*tunnel, error) {

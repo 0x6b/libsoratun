@@ -44,7 +44,7 @@ func (t *tunnel) Resolver() *net.Resolver {
 	return t.resolver
 }
 
-func NewTunnel(config *Config) (*tunnel, error) {
+func newTunnel(config *Config) (*tunnel, error) {
 	t, n, err := netstack.CreateNetTUN(
 		[]netip.Addr{config.ArcSession.ArcClientPeerIpAddress},
 		[]netip.Addr{netip.MustParseAddr(SoracomNameServer1), netip.MustParseAddr(SoracomNameServer2)},

@@ -1,10 +1,9 @@
 package libsoratun
 
 import (
-	"context"
+	"C"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"net/url"
 	"strings"
@@ -17,33 +16,48 @@ const (
 
 // UnifiedEndpointHTTPClient is an HTTP client that can be used to communicate with SORACOM Unified Endpoint.
 type UnifiedEndpointHTTPClient struct {
-	HttpClient *http.Client
+	httpClient *http.Client
 	endpoint   *url.URL
 	headers    []string
 }
 
+// Params is a set of parameters for HTTP request.
 type Params struct {
-	Path   string
-	Body   io.Reader
+	// Method is an HTTP method of the request. Only GET or POST is supported.
 	Method string
+	// Path is a path of the request.
+	Path string
+	// Body is a body of the request.
+	Body io.Reader
 }
 
-func NewUnifiedEndpointHTTPClient(context func(ctx context.Context, network, addr string) (net.Conn, error)) *UnifiedEndpointHTTPClient {
-	endpoint, _ := url.Parse(fmt.Sprintf("http://%s:%d", UnifiedEndpointHostname, UnifiedEndpointPort))
-	c := &UnifiedEndpointHTTPClient{
-		HttpClient: &http.Client{
+func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, error) {
+	t, err := newTunnel(&config)
+	if err != nil {
+		return nil, err
+	}
+
+	endpoint, err := url.Parse(fmt.Sprintf("http://%s:%d", UnifiedEndpointHostname, UnifiedEndpointPort))
+	if err != nil {
+		return nil, err
+	}
+
+	return &UnifiedEndpointHTTPClient{
+		httpClient: &http.Client{
 			Transport: &http.Transport{
-				DialContext: context,
+				DialContext: t.DialContext,
 			},
 		},
 		endpoint: endpoint,
 		headers:  []string{"User-Agent: libsoratun/0.0.1"},
-	}
-
-	return c
+	}, nil
 }
 
 func (c *UnifiedEndpointHTTPClient) MakeRequest(params *Params) (*http.Request, error) {
+	if !(params.Method == http.MethodGet || params.Method == http.MethodPost) {
+		return nil, fmt.Errorf("only GET or POST is supported")
+	}
+
 	req, err := http.NewRequest(
 		params.Method,
 		fmt.Sprintf("%s://%s:%s/%s",
@@ -69,7 +83,7 @@ func (c *UnifiedEndpointHTTPClient) MakeRequest(params *Params) (*http.Request, 
 }
 
 func (c *UnifiedEndpointHTTPClient) DoRequest(req *http.Request) (*http.Response, error) {
-	res, err := c.HttpClient.Do(req)
+	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

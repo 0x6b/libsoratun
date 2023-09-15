@@ -4,7 +4,6 @@ import (
 	"C"
 	"fmt"
 	"io"
-	"net/http"
 	"strings"
 
 	"github.com/0x6b/libsoratun/libsoratun"
@@ -16,28 +15,21 @@ func main() {
 // Send sends a request to the unified endpoint with given Config and HTTP headers.
 //
 //export Send
-func Send(configJson *C.char, method, path, body *C.char) *C.char {
+func Send(configJson, method, path, body *C.char) *C.char {
 	config, err := libsoratun.NewConfig([]byte(C.GoString(configJson)))
 	if err != nil {
 		return nil
 	}
 
-	t, err := libsoratun.NewTunnel(config)
+	c, err := libsoratun.NewUnifiedEndpointHTTPClient(*config)
 	if err != nil {
 		return nil
 	}
 
-	c := libsoratun.NewUnifiedEndpointHTTPClient(t.DialContext)
-
-	m := C.GoString(method)
-	if !(m == http.MethodGet || m == http.MethodPost) {
-		return nil
-	}
-
 	req, err := c.MakeRequest(&libsoratun.Params{
+		Method: strings.TrimSpace(C.GoString(method)),
 		Path:   strings.TrimPrefix(C.GoString(path), "/"),
 		Body:   strings.NewReader(C.GoString(body)),
-		Method: m,
 	})
 	if err != nil {
 		return nil

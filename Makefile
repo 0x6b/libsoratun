@@ -1,9 +1,8 @@
 NAME = soratun
 GO = go
-SRC_DIR = src
 LIB_DIR = lib
 
-SRC = $(shell find $(SRC_DIR) -type f -name '*.go')
+SRC = libsoratun.go
 
 LIB_SHARED = $(LIB_DIR)/shared/lib$(NAME).so
 LIB_ARCHIVE = $(LIB_DIR)/archive/lib$(NAME).a
@@ -22,10 +21,10 @@ all: libs bindings ## Build all
 libs: $(LIB_SHARED) $(LIB_ARCHIVE) ## Build libraries
 
 $(LIB_SHARED): $(SRC) go.mod ## Build shared library
-	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).so $(SRC_DIR)/main.go
+	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).so $(SRC)
 
 $(LIB_ARCHIVE): $(SRC) go.mod ## Build archive library
-	go build -buildmode=c-archive -o $(LIB_DIR)/archive/lib$(NAME).a $(SRC_DIR)/main.go
+	go build -buildmode=c-archive -o $(LIB_DIR)/archive/lib$(NAME).a $(SRC)
 
 bindings: $(BINDING_RUST) ## Build bindings
 

@@ -28,7 +28,7 @@ type Params struct {
 	// Path is a path of the request.
 	Path string
 	// Body is a body of the request.
-	Body io.Reader
+	Body string
 }
 
 func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, error) {
@@ -54,20 +54,22 @@ func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, er
 }
 
 func (c *UnifiedEndpointHTTPClient) MakeRequest(params *Params) (*http.Request, error) {
-	if !(params.Method == http.MethodGet || params.Method == http.MethodPost) {
+	method := strings.TrimSpace(params.Method)
+	if !(method == http.MethodGet || method == http.MethodPost) {
 		return nil, fmt.Errorf("only GET or POST is supported")
 	}
 
-	req, err := http.NewRequest(
-		params.Method,
-		fmt.Sprintf("%s://%s:%s/%s",
-			c.endpoint.Scheme,
-			c.endpoint.Hostname(),
-			c.endpoint.Port(),
-			params.Path,
-		),
-		params.Body,
-	)
+	if params.Path == "" {
+		return nil, fmt.Errorf("path is required")
+	}
+	path := strings.TrimPrefix(params.Path, "/")
+
+	if params.Body == "" {
+		return nil, fmt.Errorf("body is required")
+	}
+	body := strings.NewReader(params.Body)
+
+	req, err := http.NewRequest(params.Method, fmt.Sprintf("%s/%s", c.endpoint, path), body)
 	if err != nil {
 		return nil, err
 	}

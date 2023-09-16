@@ -4,13 +4,11 @@ import (
 	"C"
 	"fmt"
 	"io"
-	"strings"
 
 	"github.com/0x6b/libsoratun/libsoratun"
 )
 
-func main() {
-}
+func main() {}
 
 // Send sends a request to the unified endpoint with given Config and HTTP headers.
 // Args:
@@ -33,9 +31,9 @@ func Send(configJson, method, path, body *C.char) *C.char {
 	}
 
 	req, err := c.MakeRequest(&libsoratun.Params{
-		Method: strings.TrimSpace(C.GoString(method)),
-		Path:   strings.TrimPrefix(C.GoString(path), "/"),
-		Body:   strings.NewReader(C.GoString(body)),
+		Method: C.GoString(method),
+		Path:   C.GoString(path),
+		Body:   C.GoString(body),
 	})
 	if err != nil {
 		return nil

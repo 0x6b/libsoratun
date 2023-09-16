@@ -1,9 +1,7 @@
 const { Library } = require("ffi-napi");
 const { readFileSync } = require("fs");
 
-// if you are on macOS, you have to rename the library `libsoratun.so` to `libsoratun.dylib`,
-// since ffi-napi does not support `.so` extension on macOS.
-const soratun = Library("libsoratun", {
+const soratun = Library("../lib/shared/libsoratun", {
   Send: ["string", ["string", "string", "string", "string"]],
 });
 

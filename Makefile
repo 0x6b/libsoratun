@@ -24,6 +24,7 @@ libs: $(LIB_SHARED) $(LIB_ARCHIVE) ## Build libraries
 
 $(LIB_SHARED): $(SRC) go.mod ## Build shared library
 	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).so $(LIB_ENTRY)
+	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).dylib $(LIB_ENTRY)
 
 $(LIB_ARCHIVE): $(SRC) go.mod ## Build archive library
 	go build -buildmode=c-archive -o $(LIB_DIR)/archive/lib$(NAME).a $(LIB_ENTRY)

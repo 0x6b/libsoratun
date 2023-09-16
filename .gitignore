@@ -1,3 +1,7 @@
 rust/target
 arc.json
-lib/*
+nodejs/node_modules
+*.dylib
+*.so
+*.a
+*.h

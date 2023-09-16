@@ -12,6 +12,8 @@ LIB_ARCHIVE = $(LIB_DIR)/archive/lib$(NAME).a
 BINDING_DIR_RUST = rust
 BINDING_RUST = $(BINDING_DIR_RUST)/src/$(NAME).rs
 
+LDFLAGS = -ldflags="-X 'github.com/0x6b/libsoratun/libsoratun.Revision=$(shell git rev-parse --short HEAD)'"
+
 help:
 	@echo "usage: make <\033[36mtarget\033[0m>"
 	@echo
@@ -23,11 +25,11 @@ all: libs bindings ## Build all
 libs: $(LIB_SHARED) $(LIB_ARCHIVE) ## Build libraries
 
 $(LIB_SHARED): $(SRC) go.mod ## Build shared library
-	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).so $(LIB_ENTRY)
-	go build -buildmode=c-shared -o $(LIB_DIR)/shared/lib$(NAME).dylib $(LIB_ENTRY)
+	go build -buildmode=c-shared $(LDFLAGS) -o $(LIB_DIR)/shared/lib$(NAME).so $(LIB_ENTRY)
+	go build -buildmode=c-shared $(LDFLAGS) -o $(LIB_DIR)/shared/lib$(NAME).dylib $(LIB_ENTRY)
 
 $(LIB_ARCHIVE): $(SRC) go.mod ## Build archive library
-	go build -buildmode=c-archive -o $(LIB_DIR)/archive/lib$(NAME).a $(LIB_ENTRY)
+	go build -buildmode=c-archive $(LDFLAGS) -o $(LIB_DIR)/archive/lib$(NAME).a $(LIB_ENTRY)
 
 bindings: $(BINDING_RUST) ## Build bindings
 

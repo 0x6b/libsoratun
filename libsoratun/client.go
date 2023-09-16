@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+var Revision = "dev"
+
 const (
 	UnifiedEndpointHostname = "100.127.69.42"
 	UnifiedEndpointPort     = 80
@@ -58,7 +60,7 @@ func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, er
 			},
 		},
 		endpoint: endpoint,
-		headers:  []string{"User-Agent: libsoratun/0.0.1"},
+		headers:  []string{"User-Agent: libsoratun/" + Revision},
 	}, nil
 }
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/netip"
+	"strings"
 
 	"golang.zx2c4.com/wireguard/conn"
 	"golang.zx2c4.com/wireguard/device"
@@ -58,14 +59,22 @@ func newTunnel(config *Config) (*tunnel, error) {
 
 	dev := device.NewDevice(t, conn.NewDefaultBind(), logger)
 
+	var allowedIPs []string
+	for _, v := range config.ArcSession.ArcAllowedIPs {
+		ip := net.IPNet(*v)
+		size, _ := ip.Mask.Size()
+		allowedIPs = append(allowedIPs, fmt.Sprintf("allowed_ip=%s/%d", ip.IP, size))
+	}
+
 	conf := fmt.Sprintf(`private_key=%s
 public_key=%s
 endpoint=%s
-allowed_ip=0.0.0.0/0
+%s
 `,
 		config.PrivateKey.AsHexString(),
 		config.ArcSession.ArcServerPeerPublicKey.AsHexString(),
 		config.ArcSession.ArcServerEndpoint.String(),
+		strings.Join(allowedIPs, "\n"),
 	)
 
 	if err := dev.IpcSet(conf); err != nil {

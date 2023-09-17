@@ -55,7 +55,7 @@ func newTunnel(config *Config) (*tunnel, error) {
 		return nil, fmt.Errorf("failed to create a tunnel: %w", err)
 	}
 
-	logger := device.NewLogger(2, "(libsoratun) ")
+	logger := device.NewLogger(config.LogLevel, "(libsoratun/tunnel) ")
 
 	dev := device.NewDevice(t, conn.NewDefaultBind(), logger)
 
@@ -77,6 +77,7 @@ endpoint=%s
 		strings.Join(allowedIPs, "\n"),
 	)
 
+	logger.Verbosef("Soracom Arc connection configuration:\n%s", conf)
 	if err := dev.IpcSet(conf); err != nil {
 		return nil, fmt.Errorf("failed to configure device: %w", err)
 	}

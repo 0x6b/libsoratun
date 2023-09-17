@@ -34,6 +34,8 @@ type Config struct {
 	PrivateKey Key `json:"privateKey"`
 	// ArcSession holds connection information provided from SORACOM Arc server.
 	ArcSession *ArcSession `json:"arcSessionStatus,omitempty"`
+	// LogLevel specifies logging level, verbose (2), error (1), or silent (0).
+	LogLevel int `json:"logLevel"`
 }
 
 // ArcSession holds SORACOM Arc configurations received from the server.

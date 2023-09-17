@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"strings"
+
+	"golang.zx2c4.com/wireguard/device"
 )
 
 var Revision = "dev"
@@ -21,6 +24,7 @@ type UnifiedEndpointHTTPClient struct {
 	httpClient *http.Client
 	endpoint   *url.URL
 	headers    []string
+	logger     *device.Logger
 }
 
 // Params is a set of parameters for HTTP request.
@@ -43,6 +47,7 @@ type Params struct {
 //
 // The created client uses the http.Transport with a custom DialContext for making HTTP requests. The User-Agent header for all requests made by this client is set to "libsoratun/0.0.1".
 func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, error) {
+	logger := device.NewLogger(config.LogLevel, "(libsoratun/client) ") // lazily use device.Logger for logging
 	t, err := newTunnel(&config)
 	if err != nil {
 		return nil, err
@@ -53,6 +58,10 @@ func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, er
 		return nil, err
 	}
 
+	ua := fmt.Sprintf("User-Agent: libsoratun/%s", Revision)
+	logger.Verbosef("Soracom Unified Endpoint URL: %s", endpoint)
+	logger.Verbosef("%s", ua)
+
 	return &UnifiedEndpointHTTPClient{
 		httpClient: &http.Client{
 			Transport: &http.Transport{
@@ -60,7 +69,8 @@ func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, er
 			},
 		},
 		endpoint: endpoint,
-		headers:  []string{"User-Agent: libsoratun/" + Revision},
+		headers:  []string{ua},
+		logger:   logger,
 	}, nil
 }
 
@@ -95,6 +105,13 @@ func (c *UnifiedEndpointHTTPClient) MakeRequest(params *Params) (*http.Request, 
 		return nil, err
 	}
 
+	r, err := httputil.DumpRequest(req, true)
+	if err == nil {
+		c.logger.Verbosef("HTTP request:\n%s", r)
+	} else {
+		c.logger.Errorf("Failed to dump HTTP request", err)
+	}
+
 	for _, h := range c.headers {
 		header := strings.SplitN(h, ":", 2)
 		if len(header) == 2 {
@@ -116,6 +133,13 @@ func (c *UnifiedEndpointHTTPClient) DoRequest(req *http.Request) (*http.Response
 	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
+	}
+
+	r, err := httputil.DumpResponse(res, true)
+	if err == nil {
+		c.logger.Verbosef("HTTP response:\n%s", r)
+	} else {
+		c.logger.Errorf("Failed to dump HTTP response", err)
 	}
 
 	if res.StatusCode >= http.StatusBadRequest {

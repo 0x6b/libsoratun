@@ -9,7 +9,7 @@ LIB_ENTRY = libsoratun.go
 LIB_SHARED = $(LIB_DIR)/shared/lib$(NAME).so
 LIB_ARCHIVE = $(LIB_DIR)/archive/lib$(NAME).a
 
-BINDING_DIR_RUST = rust
+BINDING_DIR_RUST = examples/rust
 BINDING_RUST = $(BINDING_DIR_RUST)/src/$(NAME).rs
 
 LDFLAGS = -ldflags="-X 'github.com/0x6b/libsoratun/libsoratun.Revision=$(shell git rev-parse --short HEAD)'"

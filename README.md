@@ -1,18 +1,15 @@
 # libsoratun
 
-The C library allows you to embed Soracom Arc connectivity into your own program. You can send a message to the unified endpoint, with Soracom Arc, entirely from userspace (no root privilege is required).
+The C library allows you to embed [Soracom Arc](https://users.soracom.io/ja-jp/docs/arc/) connectivity into your own program. You can send a message to the unified endpoint, with Soracom Arc, entirely from userspace (no root privilege is required).
 
 ## Tested Setup
 
-- Go 1.21.0
-- Rust 1.72.0
-- Python 3.9.6
-- Node.js v18.14.2
+- Go 1.21.1
 - macOS Ventura 13.4.1
 
 ## Prerequisites
 
-1. You have to have `arc.json`, configuration file for [`soratun`](https://github.com/soracom/soratun/) locally. See documentation for detail.
+1. You have to have a virtual SIM, along with `arc.json` which is a configuration file for [`soratun`](https://github.com/soracom/soratun/) locally. See documentation for detail.
    - [Soracom Arc Soratun Tool](https://developers.soracom.io/en/docs/arc/soratun/) (English)
    - [soratun を利用して接続する: soratun の概要と機能](https://users.soracom.io/ja-jp/docs/arc/soratun-overview/) (Japanese)
 2. You have to enable the unified endpoint for your SIM group. See documentation for detail.
@@ -31,6 +28,8 @@ $ make all
 
 ### Rust
 
+Tested with Rust 1.72.0.
+
 - [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
 
 ```console
@@ -40,6 +39,8 @@ $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
 
 ### Python
 
+Tested with Python 3.9.6.
+
 - [`examples/python/main.py`](examples/python/main.py)
 
 ```console
@@ -48,6 +49,8 @@ $ python3 main.py /path/to/arc.json '{"message": "hey"}'
 ```
 
 ### Node.js
+
+Tested with Node.js v18.14.2.
 
 - [`examples/nodejs/src/index.js`](examples/nodejs/src/index.js)
 

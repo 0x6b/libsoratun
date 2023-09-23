@@ -19,25 +19,43 @@ The C library allows you to embed Soracom Arc connectivity into your own program
    - [Unified Endpoint Overview](https://developers.soracom.io/en/docs/unified-endpoint/) (English)
    - [Unified Endpoint](https://users.soracom.io/ja-jp/docs/unified-endpoint/) (Japanese)
 
-## Build and Run Examples
+## Build
 
 ```console
 $ git clone https://github.com/soracom/libsoratun
 $ cd libsoratun
 $ make all
-$ # Rust example
-$ cd rust
+```
+
+## Run Examples
+
+### Rust
+
+- [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
+
+```console
+$ cd examples/rust
 $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
-$ # Python example
-$ cd python
+```
+
+### Python
+
+- [`examples/python/main.py`](examples/python/main.py)
+
+```console
+$ cd examples/python
 $ python3 main.py /path/to/arc.json '{"message": "hey"}'
-$ # Node.js example
-$ cd nodejs
+```
+
+### Node.js
+
+- [`examples/nodejs/src/index.js`](examples/nodejs/src/index.js)
+
+```console
+$ cd examples/nodejs
 $ npm install
 $ node src/index.py /path/to/arc.json '{"message": "hey"}'
 ```
-
-See [`rust/src/main.rs`](rust/src/main.rs), [`python/main.py`](python/main.py), or [`nodejs/src/index.js`](nodejs/src/index.js) for usage.
 
 ## License
 

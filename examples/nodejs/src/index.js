@@ -1,7 +1,7 @@
 const { Library } = require("ffi-napi");
 const { readFileSync } = require("fs");
 
-const soratun = Library("../lib/shared/libsoratun", {
+const soratun = Library("../../lib/shared/libsoratun", {
   Send: ["string", ["string", "string", "string", "string"]],
 });
 

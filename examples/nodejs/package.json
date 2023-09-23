@@ -1,14 +1,14 @@
 {
   "name": "nodejs",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Example of using Node.js FFI to call a function in the libsoratun",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "kaoru <k@warpnine.io>",
+  "license": "MIT",
   "dependencies": {
     "ffi-napi": "^4.0.3"
   }

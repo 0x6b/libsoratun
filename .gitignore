@@ -1,7 +1,7 @@
-rust/target
-arc.json
-nodejs/node_modules
-*.dylib
-*.so
 *.a
+*.dylib
 *.h
+*.json
+*.so
+examples/nodejs/node_modules
+examples/rust/target

@@ -1,7 +1,7 @@
 fn main() {
     #[cfg(target_os = "macos")]
     {
-        let path = "../lib/archive";
+        let path = "../../lib/archive";
         let lib = "soratun";
 
         println!("cargo:rustc-link-search=native={}", path);

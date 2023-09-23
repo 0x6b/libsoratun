@@ -2,7 +2,9 @@
 name = "soratun-rs"
 version = "0.1.0"
 edition = "2021"
-description = "A CLI for interacting with the unified endpoint."
+authors = ["kaoru <k@warpnine.io>"]
+description = "Example of using Rust to call a function in the libsoratun"
+license = "MIT"
 
 [dependencies]
 clap = { version = "4.3.17", features = ["derive"] }

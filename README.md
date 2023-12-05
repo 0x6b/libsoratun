@@ -50,7 +50,7 @@ $ python3 main.py /path/to/arc.json '{"message": "hey"}'
 
 ### Node.js
 
-Tested with Node.js v18.18.2.
+Tested with Node.js v18.19.0.
 
 - [`examples/nodejs/src/index.js`](examples/nodejs/src/index.js)
 

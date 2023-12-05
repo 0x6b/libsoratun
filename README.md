@@ -28,7 +28,7 @@ $ make all
 
 ### Rust
 
-Tested with Rust 1.72.0.
+Tested with Rust 1.74.0.
 
 - [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
 

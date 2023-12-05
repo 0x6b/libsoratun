@@ -39,7 +39,7 @@ $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
 
 ### Python
 
-Tested with Python 3.9.6.
+Tested with Python 3.12.0
 
 - [`examples/python/main.py`](examples/python/main.py)
 

@@ -4,8 +4,8 @@ The C library allows you to embed [Soracom Arc](https://users.soracom.io/ja-jp/d
 
 ## Tested Setup
 
-- Go 1.21.1
-- macOS Ventura 13.4.1
+- Go 1.21.4
+- macOS Sonoma 14.1.2
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ $ make all
 
 ### Rust
 
-Tested with Rust 1.72.0.
+Tested with Rust 1.74.0.
 
 - [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
 
@@ -39,7 +39,7 @@ $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
 
 ### Python
 
-Tested with Python 3.9.6.
+Tested with Python 3.12.0
 
 - [`examples/python/main.py`](examples/python/main.py)
 
@@ -50,7 +50,7 @@ $ python3 main.py /path/to/arc.json '{"message": "hey"}'
 
 ### Node.js
 
-Tested with Node.js v18.14.2.
+Tested with Node.js v18.18.2.
 
 - [`examples/nodejs/src/index.js`](examples/nodejs/src/index.js)
 

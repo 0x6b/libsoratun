@@ -4,8 +4,8 @@ The C library allows you to embed [Soracom Arc](https://users.soracom.io/ja-jp/d
 
 ## Tested Setup
 
-- Go 1.21.1
-- macOS Ventura 13.4.1
+- Go 1.21.4
+- macOS Sonoma 14.1.2
 
 ## Prerequisites
 

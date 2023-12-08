@@ -77,7 +77,7 @@ endpoint=%s
 		strings.Join(allowedIPs, "\n"),
 	)
 
-	logger.Verbosef("Soracom Arc connection configuration:\n%s", conf)
+	logger.Verbosef("Soracom Arc connection configuration:\n%s", config)
 	if err := dev.IpcSet(conf); err != nil {
 		return nil, fmt.Errorf("failed to configure device: %w", err)
 	}

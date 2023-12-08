@@ -28,7 +28,7 @@ $ make libs
 
 ### Rust
 
-Tested with Rust 1.74.1.
+Tested with Rust 1.74.1. In order to build Rust bindings, you have to install [bindgen-cli](https://rust-lang.github.io/rust-bindgen/command-line-usage.html) and its prerequisites.
 
 - [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
 
@@ -63,3 +63,4 @@ $ node src/index.py /path/to/arc.json '{"message": "hey"}'
 ## License
 
 MIT. See [LICENSE](LICENSE) for detail.
+

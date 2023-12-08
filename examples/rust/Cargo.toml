@@ -1,5 +1,5 @@
 [package]
-name = "soratun-rs"
+name = "libsoratun-example"
 version = "0.1.0"
 edition = "2021"
 authors = ["kaoru <k@warpnine.io>"]

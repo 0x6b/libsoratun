@@ -37,6 +37,7 @@ $(BINDING_RUST): $(LIB_ARCHIVE) ## Build Rust bindings
 all: libs bindings ## Build libraries and Rust binding
 
 clean: ## Clean up
-	rm -rf $(LIB_DIR)/{archive,shared}/*
+	rm -rf $(LIB_DIR)/archive/*
+	rm -rf $(LIB_DIR)/shared/*
 
 .PHONY: help all libs bindings

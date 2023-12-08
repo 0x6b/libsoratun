@@ -21,7 +21,7 @@ The C library allows you to embed [Soracom Arc](https://users.soracom.io/ja-jp/d
 ```console
 $ git clone https://github.com/soracom/libsoratun
 $ cd libsoratun
-$ make all
+$ make libs
 ```
 
 ## Run Examples

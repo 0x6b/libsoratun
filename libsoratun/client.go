@@ -107,7 +107,7 @@ func (c *UnifiedEndpointHTTPClient) MakeRequest(params *Params) (*http.Request, 
 
 	r, err := httputil.DumpRequest(req, true)
 	if err == nil {
-		c.logger.Verbosef("HTTP request:\n%s", r)
+		c.logger.Verbosef("Sent HTTP request:\n%s", r)
 	} else {
 		c.logger.Errorf("Failed to dump HTTP request", err)
 	}
@@ -137,7 +137,7 @@ func (c *UnifiedEndpointHTTPClient) DoRequest(req *http.Request) (*http.Response
 
 	r, err := httputil.DumpResponse(res, true)
 	if err == nil {
-		c.logger.Verbosef("HTTP response:\n%s", r)
+		c.logger.Verbosef("Received HTTP response:\n%s", r)
 	} else {
 		c.logger.Errorf("Failed to dump HTTP response", err)
 	}

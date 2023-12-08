@@ -26,17 +26,6 @@ $ make libs
 
 ## Run Examples
 
-### Rust
-
-Tested with Rust 1.74.1. In order to build Rust bindings, you have to install [bindgen-cli](https://rust-lang.github.io/rust-bindgen/command-line-usage.html) and its prerequisites.
-
-- [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
-
-```console
-$ cd examples/rust
-$ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
-```
-
 ### Python
 
 Tested with Python 3.12.0
@@ -60,7 +49,33 @@ $ npm install
 $ node src/index.py /path/to/arc.json '{"message": "hey"}'
 ```
 
+### Rust
+
+Tested with Rust 1.74.1. In order to build Rust bindings, you have to install [bindgen-cli](https://rust-lang.github.io/rust-bindgen/command-line-usage.html) and its prerequisites.
+
+- [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
+
+```console
+$ make bindings
+$ cd examples/rust
+$ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
+```
+
+### AWS Lambda (Python 3.11)
+
+1. Build a shared library on target platform. Tested on arm64.
+
+   ```console
+   $ make libs
+   ```
+2. Place `examples/lamdada/lambda_function.py`, `lib/shared/libsoratun.so`, and your `arc.json` in a same directory.
+3. Zip it up and upload it to AWS Lambda function.
+
+   ```console
+   $ zip -r lambda.zip lambda_function.py libsoratun.so arc.json
+   ```
+
 ## License
 
 MIT. See [LICENSE](LICENSE) for detail.
-
+ 

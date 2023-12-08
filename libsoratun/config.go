@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/netip"
 	"strconv"
+	"strings"
 
 	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
@@ -131,4 +132,27 @@ func (n *IPNet) UnmarshalText(text []byte) error {
 
 	n.IP, n.Mask = ipnet.IP, ipnet.Mask
 	return nil
+}
+
+// String returns string representation of Config. The private key is masked.
+func (c *Config) String() string {
+	var ips []string
+	for _, ip := range c.ArcSession.ArcAllowedIPs {
+		ips = append(ips, (*net.IPNet)(ip).String())
+	}
+
+	return fmt.Sprintf(`[Interface]
+Address = %s/32
+PrivateKey = <secret>
+
+[Peer]
+PublicKey = %s
+AllowedIPs = %s
+Endpoint = %s
+`,
+		c.ArcSession.ArcClientPeerIpAddress,
+		c.ArcSession.ArcServerPeerPublicKey.AsHexString(),
+		strings.Join(ips, ", "),
+		c.ArcSession.ArcServerEndpoint.String(),
+	)
 }

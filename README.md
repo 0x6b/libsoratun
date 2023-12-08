@@ -4,7 +4,7 @@ The C library allows you to embed [Soracom Arc](https://users.soracom.io/ja-jp/d
 
 ## Tested Setup
 
-- Go 1.21.4
+- Go 1.21.5 darwin/arm64
 - macOS Sonoma 14.1.2
 
 ## Prerequisites
@@ -28,7 +28,7 @@ $ make all
 
 ### Rust
 
-Tested with Rust 1.74.0.
+Tested with Rust 1.74.1.
 
 - [`examples/rust/src/main.rs`](examples/rust/src/main.rs)
 

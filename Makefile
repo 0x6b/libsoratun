@@ -20,8 +20,6 @@ help:
 	@echo "available targets:"
 	@grep -E '^[a-zA-Z._-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
 
-all: libs bindings ## Build all
-
 libs: $(LIB_SHARED) $(LIB_ARCHIVE) ## Build libraries
 
 $(LIB_SHARED): $(SRC) go.mod ## Build shared library
@@ -31,10 +29,12 @@ $(LIB_SHARED): $(SRC) go.mod ## Build shared library
 $(LIB_ARCHIVE): $(SRC) go.mod ## Build archive library
 	go build -buildmode=c-archive $(LDFLAGS) -o $(LIB_DIR)/archive/lib$(NAME).a $(LIB_ENTRY)
 
-bindings: $(BINDING_RUST) ## Build bindings
+bindings: $(BINDING_RUST) ## Build Rust binding
 
 $(BINDING_RUST): $(LIB_ARCHIVE) ## Build Rust bindings
 	bindgen --no-layout-tests $(LIB_DIR)/archive/lib$(NAME).h -o $(BINDING_DIR_RUST)/src/$(NAME).rs
+
+all: libs bindings ## Build libraries and Rust binding
 
 clean: ## Clean up
 	rm -rf $(LIB_DIR)/{archive,shared}/*

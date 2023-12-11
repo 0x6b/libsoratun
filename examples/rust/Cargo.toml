@@ -7,4 +7,4 @@ description = "Example of using Rust to call a function in the libsoratun"
 license = "MIT"
 
 [dependencies]
-clap = { version = "4.3.17", features = ["derive"] }
+clap = { version = "4.4.11", features = ["derive"] }

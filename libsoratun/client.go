@@ -85,7 +85,7 @@ func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, er
 // Returns:
 // - `*http.Request`: A pointer to the created http.Request, and an error object.
 func (c *UnifiedEndpointHTTPClient) MakeRequest(params *Params) (*http.Request, error) {
-	method := strings.TrimSpace(params.Method)
+	method := strings.ToUpper(strings.TrimSpace(params.Method))
 	if !(method == http.MethodGet || method == http.MethodPost) {
 		return nil, fmt.Errorf("only GET or POST is supported")
 	}

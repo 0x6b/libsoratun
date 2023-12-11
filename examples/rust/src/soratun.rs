@@ -6,15 +6,8 @@ pub struct __BindgenComplex<T> {
     pub re: T,
     pub im: T,
 }
-pub type wchar_t = ::std::os::raw::c_uint;
-#[repr(C)]
-#[repr(align(16))]
-#[derive(Debug, Copy, Clone)]
-pub struct max_align_t {
-    pub __clang_max_align_nonce1: ::std::os::raw::c_longlong,
-    pub __bindgen_padding_0: u64,
-    pub __clang_max_align_nonce2: u128,
-}
+pub type wchar_t = ::std::os::raw::c_int;
+pub type max_align_t = f64;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _GoString_ {

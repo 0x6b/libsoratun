@@ -46,7 +46,7 @@ Tested with Node.js v18.19.0.
 ```console
 $ cd examples/nodejs
 $ npm install
-$ node src/index.py /path/to/arc.json '{"message": "hey"}'
+$ node src/index.js /path/to/arc.json '{"message": "hey"}'
 ```
 
 ### Rust

@@ -1,15 +1,12 @@
 use std::{
     error::Error,
-    ffi::{
-        c_char,
-        CStr,
-        CString,
-    },
-    fs::File,
-    io::Read,
+    ffi::{CStr, CString},
+    fs::read_to_string,
+    path::PathBuf,
 };
 
 use clap::Parser;
+
 use crate::soratun::Send;
 
 #[allow(non_snake_case)]
@@ -18,14 +15,13 @@ use crate::soratun::Send;
 #[allow(unused_qualifications)]
 mod soratun;
 
-#[derive(Parser, Debug)]
-#[clap()]
+#[derive(Parser)]
 struct Args {
-    /// Path to the Soracom Arc config file.
+    /// Path to the soratun configuration file.
     #[clap(short, long, default_value = "arc.json")]
-    config: String,
+    config: PathBuf,
 
-    /// HTTP method.
+    /// HTTP method. Only GET or POST (case insensitive) is supported.
     #[clap(short, long, default_value = "POST")]
     method: String,
 
@@ -39,7 +35,17 @@ struct Args {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let (config, method, path, body) = into_raw(Args::parse())?;
+    let Args {
+        config,
+        method,
+        path,
+        body,
+    } = Args::parse();
+
+    let config = CString::new(read_to_string(config)?)?.into_raw();
+    let method = CString::new(method)?.into_raw();
+    let path = CString::new(path)?.into_raw();
+    let body = CString::new(body)?.into_raw();
 
     let result = unsafe {
         let r = Send(config, method, path, body);
@@ -48,19 +54,4 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("{result}");
 
     Ok(())
-}
-
-fn into_raw(args: Args) -> Result<(*mut c_char, *mut c_char, *mut c_char, *mut c_char), Box<dyn Error>> {
-    let config = read_config(&args.config)?.into_raw();
-    let method = CString::new(args.method)?.into_raw();
-    let path = CString::new(args.path)?.into_raw();
-    let body = CString::new(args.body)?.into_raw();
-    Ok((config, method, path, body))
-}
-
-fn read_config(path: &str) -> Result<CString, Box<dyn Error>> {
-    let mut file = File::open(path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    Ok(CString::new(contents)?)
 }

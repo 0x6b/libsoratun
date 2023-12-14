@@ -28,7 +28,7 @@ $ make libs
 
 ### Python
 
-Tested with Python 3.12.0
+Tested with Python 3.12.0.
 
 - [`examples/python/main.py`](examples/python/main.py)
 
@@ -61,7 +61,9 @@ $ cd examples/rust
 $ cargo run -- --config /path/to/arc.json '{"message": "hey"}'
 ```
 
-### AWS Lambda (Python 3.11)
+### AWS Lambda
+
+Tested with AWS Lambda Python 3.11 runtime.
 
 1. Build a shared library on target platform. Tested on arm64.
 

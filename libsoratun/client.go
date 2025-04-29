@@ -41,7 +41,7 @@ type Params struct {
 	Body string
 }
 
-// UnifiedEndpointUDPClient is an UDP client that can be used to communicate with SORACOM Unified Endpoint.
+// UnifiedEndpointUDPClient is a UDP client that can be used to communicate with SORACOM Unified Endpoint.
 type UnifiedEndpointUDPClient struct {
 	dialcontext func(ctx context.Context, network string, addr string) (net.Conn, error)
 	logger      *device.Logger

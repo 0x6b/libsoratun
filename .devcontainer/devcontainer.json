@@ -1,0 +1,14 @@
+{
+    "name": "Go + Make DevContainer",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.Go"
+            ]
+        }
+    },
+    "postCreateCommand": "go mod tidy"
+}

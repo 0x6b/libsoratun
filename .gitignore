@@ -3,5 +3,6 @@
 *.h
 *.json
 *.so
+*.dll
 examples/nodejs/node_modules
 examples/rust/target

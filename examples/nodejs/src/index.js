@@ -1,9 +1,22 @@
-const { Library } = require("ffi-napi");
+const { open, load, DataType, Result, unwrapErr } = require('node-ffi-rs');
 const { readFileSync } = require("fs");
+const { platform } = require("os");
 
-const soratun = Library("../../lib/shared/libsoratun", {
-  Send: ["string", ["string", "string", "string", "string"]],
-});
+try {
+  open({
+    library: 'libsoratun',
+    path: '../../lib/shared/libsoratun' + (platform() === "win32" ? ".dll" : ".so")
+  })
 
-const config = readFileSync(process.argv[2], "utf8");
-soratun.Send(config, "POST", "/", process.argv[3]);
+  const config = readFileSync(process.argv[2], "utf8");
+  const response = load({
+    library: 'libsoratun',
+    funcName: 'Send',
+    retType: DataType.String,
+    paramsType: [DataType.String, DataType.String, DataType.String, DataType.String],
+    paramsValue: [config, "POST", "/", process.argv[3]]
+  });
+  console.log(response);
+} catch (error) {
+  console.error('Error:', error);
+}

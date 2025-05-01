@@ -1,9 +1,6 @@
-const { Library } = require("ffi-napi");
+const { open, load, DataType, Result, unwrapErr } = require('node-ffi-rs');
 const { readFileSync } = require("fs");
-
-const soratun = Library("../../lib/shared/libsoratun", {
-  SendUDP: ["string", ["string","pointer","int"]]
-});
+const { platform } = require("os");
 
 const config = readFileSync(process.argv[2], "utf8");
 
@@ -14,5 +11,20 @@ message[1] = 1
 message[2] = 3
 message[3] = 0x4d + 1 + 3
 
-const response = soratun.SendUDP(config,message,4)
-console.log(response);
+try {
+  open({
+    library: 'libsoratun',
+    path: '../../lib/shared/libsoratun' + (platform() === "win32" ? ".dll" : ".so")
+  })
+
+  const response = load({
+    library: 'libsoratun',
+    funcName: 'SendUDP',
+    retType: DataType.String,
+    paramsType: [DataType.String, DataType.U8Array, DataType.I64],
+    paramsValue: [config, message, message.length]
+  });
+  console.log(response);
+} catch (error) {
+  console.error('Error:', error);
+}

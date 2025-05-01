@@ -1,5 +1,6 @@
 const { open, load, DataType, Result, unwrapErr } = require('node-ffi-rs');
 const { readFileSync } = require("fs");
+const { platform } = require("os");
 
 const config = readFileSync(process.argv[2], "utf8");
 

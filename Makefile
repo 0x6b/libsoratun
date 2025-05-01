@@ -25,7 +25,9 @@ libs: $(LIB_SHARED) $(LIB_ARCHIVE) ## Build libraries
 $(LIB_SHARED): $(SRC) go.mod ## Build shared library
 	go build -buildmode=c-shared $(LDFLAGS) -o $(LIB_DIR)/shared/lib$(NAME).so $(LIB_ENTRY)
 	go build -buildmode=c-shared $(LDFLAGS) -o $(LIB_DIR)/shared/lib$(NAME).dylib $(LIB_ENTRY)
+ifeq ($(shell uname -s),Linux)
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc go build -buildmode=c-shared $(LDFLAGS) -o $(LIB_DIR)/shared/lib$(NAME).dll $(LIB_ENTRY)
+endif
 
 $(LIB_ARCHIVE): $(SRC) go.mod ## Build archive library
 	go build -buildmode=c-archive $(LDFLAGS) -o $(LIB_DIR)/archive/lib$(NAME).a $(LIB_ENTRY)

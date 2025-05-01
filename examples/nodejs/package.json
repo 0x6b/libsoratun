@@ -10,6 +10,6 @@
   "author": "kaoru <k@warpnine.io>",
   "license": "MIT",
   "dependencies": {
-    "ffi-napi": "^4.0.3"
+    "node-ffi-rs": "^1.2.10"
   }
 }

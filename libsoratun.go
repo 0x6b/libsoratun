@@ -85,18 +85,18 @@ func Send(configJson, method, path, body *C.char) *C.char {
 func SendUDP(configJson *C.char, body *C.char, bodyLen C.int) *C.char {
 	config, err := libsoratun.NewConfig([]byte(C.GoString(configJson)))
 	if err != nil {
-		return nil
+		return C.CString("Error on NewConfig")
 	}
 
 	c, err := libsoratun.NewUnifiedEndpointUDPClient(*config)
 	if err != nil {
-		return nil
+		return C.CString("Error on NewUnifiedEndpointUDPClient")
 	}
 
 	bodyBytes := C.GoBytes(unsafe.Pointer(body), bodyLen)
 	res, err := c.DoUDPRequest(bodyBytes, 23080)
 	if err != nil {
-		return nil
+		return C.CString("Error on DoUDPRequest")
 	}
 
 	return C.CString(res)

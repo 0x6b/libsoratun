@@ -14,6 +14,7 @@ import (
 import (
 	"context"
 	"net"
+	"time"
 )
 
 var Revision = "dev"
@@ -202,29 +203,31 @@ func (c *UnifiedEndpointHTTPClient) DoRequest(req *http.Request) (*http.Response
 // Args:
 // - `Body`: A request body
 // - `port`: A string representing the address to send the request to.
+// - `timeout`: A timeout duration for the request.
 //
 // Returns:
 // - `string`: A response string, and an error object.
-func (c *UnifiedEndpointUDPClient) DoUDPRequest(body []byte, port int16) (string, error) {
+func (c *UnifiedEndpointUDPClient) DoUDPRequest(body []byte, port uint16, timeout uint16) (string, error) {
 	addr := fmt.Sprintf("%s:%d", UnifiedEndpointHostname, port)
 	conn, err := c.dialcontext(context.Background(), "udp", addr)
 	if err != nil {
 		return "", err
 	}
 	defer conn.Close()
-	len, err := conn.Write([]byte(body))
+	sendLen, err := conn.Write([]byte(body))
 	if err != nil {
 		c.logger.Errorf("Failed to Write packet", err)
 		return "", err
 	}
-	c.logger.Verbosef("UDP sent %d bytes", len)
+	c.logger.Verbosef("UDP sent %d bytes", sendLen)
 
 	res := make([]byte, 1024)
 
-	len, err = conn.Read(res)
+	conn.SetReadDeadline((time.Now().Add(time.Duration(timeout) * time.Millisecond)))
+	readLen, err := conn.Read(res)
 	if err != nil {
 		return "", err
 	}
-	c.logger.Verbosef("UDP received %d bytes", len)
-	return string(res), nil
+	c.logger.Verbosef("UDP received %d bytes", readLen)
+	return string(res[:readLen]), nil
 }

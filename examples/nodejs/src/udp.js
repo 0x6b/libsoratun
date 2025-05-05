@@ -21,8 +21,8 @@ try {
     library: 'libsoratun',
     funcName: 'SendUDP',
     retType: DataType.String,
-    paramsType: [DataType.String, DataType.U8Array, DataType.I64],
-    paramsValue: [config, message, message.length]
+    paramsType: [DataType.String, DataType.U8Array, DataType.I64, DataType.I64, DataType.I64],
+    paramsValue: [config, message, message.length,23080,5000]
   });
   console.log(response);
 } catch (error) {

@@ -82,7 +82,7 @@ func Send(configJson, method, path, body *C.char) *C.char {
 //	response := SendUDP(configJson, body, bodyLen)
 //
 //export SendUDP
-func SendUDP(configJson *C.char, body *C.char, bodyLen C.int) *C.char {
+func SendUDP(configJson *C.char, body *C.char, bodyLen C.int, port C.int, timeout C.int) *C.char {
 	config, err := libsoratun.NewConfig([]byte(C.GoString(configJson)))
 	if err != nil {
 		fmt.Printf("Error on NewConfig: %v\n", err)
@@ -96,7 +96,7 @@ func SendUDP(configJson *C.char, body *C.char, bodyLen C.int) *C.char {
 	}
 
 	bodyBytes := C.GoBytes(unsafe.Pointer(body), bodyLen)
-	res, err := c.DoUDPRequest(bodyBytes, 23080)
+	res, err := c.DoUDPRequest(bodyBytes, uint16(port), uint16(timeout))
 	if err != nil {
 		fmt.Printf("Error on DoUDPRequest: %v\n", err)
 		return C.CString("Error on DoUDPRequest")

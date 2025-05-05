@@ -229,5 +229,5 @@ func (c *UnifiedEndpointUDPClient) DoUDPRequest(body []byte, port uint16, timeou
 		return "", err
 	}
 	c.logger.Verbosef("UDP received %d bytes", readLen)
-	return string(res), nil
+	return string(res[:readLen]), nil
 }

@@ -11,6 +11,11 @@ import (
 
 	"golang.zx2c4.com/wireguard/device"
 )
+import (
+	"context"
+	"net"
+	"time"
+)
 
 var Revision = "dev"
 
@@ -35,6 +40,12 @@ type Params struct {
 	Path string
 	// Body is a body of the request.
 	Body string
+}
+
+// UnifiedEndpointUDPClient is a UDP client that can be used to communicate with SORACOM Unified Endpoint.
+type UnifiedEndpointUDPClient struct {
+	dialcontext func(ctx context.Context, network string, addr string) (net.Conn, error)
+	logger      *device.Logger
 }
 
 // NewUnifiedEndpointHTTPClient creates a new HTTP client specific for the SORACOM Unified Endpoint.
@@ -71,6 +82,37 @@ func NewUnifiedEndpointHTTPClient(config Config) (*UnifiedEndpointHTTPClient, er
 		endpoint: endpoint,
 		headers:  []string{ua},
 		logger:   logger,
+	}, nil
+}
+
+// NewUnifiedEndpointUDPClient creates a new UDP client specific for the SORACOM Unified Endpoint.
+//
+// Args:
+// - `config`: A Config object containing the configuration for the SORACOM Arc connection.
+//
+// Returns:
+// - `*UnifiedEndpointUDPClient`: A pointer to the created UnifiedEndpointUDPClient and an error object. If there's any error occurred during setting up the tunnel connection or parsing the endpoint URL, the error will be returned.
+//
+// The created client uses the udp.
+func NewUnifiedEndpointUDPClient(config Config) (*UnifiedEndpointUDPClient, error) {
+	logger := device.NewLogger(config.LogLevel, "(libsoratun/client) ") // lazily use device.Logger for logging
+	t, err := newTunnel(&config)
+	if err != nil {
+		return nil, err
+	}
+
+	endpoint, err := url.Parse(fmt.Sprintf("http://%s:%d", UnifiedEndpointHostname, UnifiedEndpointPort))
+	if err != nil {
+		return nil, err
+	}
+
+	ua := fmt.Sprintf("User-Agent: libsoratun/%s", Revision)
+	logger.Verbosef("Soracom Unified Endpoint URL: %s", endpoint)
+	logger.Verbosef("%s", ua)
+
+	return &UnifiedEndpointUDPClient{
+		dialcontext: t.DialContext,
+		logger:      logger,
 	}, nil
 }
 
@@ -154,4 +196,38 @@ func (c *UnifiedEndpointHTTPClient) DoRequest(req *http.Request) (*http.Response
 	}
 
 	return res, nil
+}
+
+// DoUDPRequest sends an UDP request and returns the response.
+//
+// Args:
+// - `Body`: A request body
+// - `port`: A string representing the address to send the request to.
+// - `timeout`: A timeout duration for the request.
+//
+// Returns:
+// - `string`: A response string, and an error object.
+func (c *UnifiedEndpointUDPClient) DoUDPRequest(body []byte, port uint16, timeout uint16) (string, error) {
+	addr := fmt.Sprintf("%s:%d", UnifiedEndpointHostname, port)
+	conn, err := c.dialcontext(context.Background(), "udp", addr)
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+	sendLen, err := conn.Write([]byte(body))
+	if err != nil {
+		c.logger.Errorf("Failed to Write packet", err)
+		return "", err
+	}
+	c.logger.Verbosef("UDP sent %d bytes", sendLen)
+
+	res := make([]byte, 1024)
+
+	conn.SetReadDeadline((time.Now().Add(time.Duration(timeout) * time.Millisecond)))
+	readLen, err := conn.Read(res)
+	if err != nil {
+		return "", err
+	}
+	c.logger.Verbosef("UDP received %d bytes", readLen)
+	return string(res[:readLen]), nil
 }

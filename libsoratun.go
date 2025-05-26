@@ -7,6 +7,7 @@ import (
 
 	"github.com/0x6b/libsoratun/libsoratun"
 )
+import "unsafe"
 
 func main() {}
 
@@ -61,4 +62,45 @@ func Send(configJson, method, path, body *C.char) *C.char {
 	}
 
 	return C.CString(string(response))
+}
+
+// SendUDP is a function that uses SORACOM Arc configuration provided as a JSON string,
+// a port, and a payload to create and execute an UDP request to the SORACOM Unified Endpoint.
+// The function returns the response as a C language string, or nil if an error occurs.
+// Input parameters are expected to be C language strings.
+//
+// Parameters:
+//   - `configJson`: C string representation of SORACOM Arc configuration
+//   - `body`: body of the UDP request
+//   - `bodyLen`: length of the body
+//
+// Returns:
+//   - C string representation of the UDP response body, or nil if an error occurred
+//
+// Usage:
+//
+//	response := SendUDP(configJson, body, bodyLen)
+//
+//export SendUDP
+func SendUDP(configJson *C.char, body *C.char, bodyLen C.int, port C.int, timeout C.int) *C.char {
+	config, err := libsoratun.NewConfig([]byte(C.GoString(configJson)))
+	if err != nil {
+		fmt.Printf("Error on NewConfig: %v\n", err)
+		return C.CString("Error on NewConfig")
+	}
+
+	c, err := libsoratun.NewUnifiedEndpointUDPClient(*config)
+	if err != nil {
+		fmt.Printf("Error on NewUnifiedEndpointUDPClient: %v\n", err)
+		return C.CString("Error on NewUnifiedEndpointUDPClient")
+	}
+
+	bodyBytes := C.GoBytes(unsafe.Pointer(body), bodyLen)
+	res, err := c.DoUDPRequest(bodyBytes, uint16(port), uint16(timeout))
+	if err != nil {
+		fmt.Printf("Error on DoUDPRequest: %v\n", err)
+		return C.CString("Error on DoUDPRequest")
+	}
+
+	return C.CString(res)
 }
